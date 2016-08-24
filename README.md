@@ -24,6 +24,8 @@ To run individual tests, in a python unit test module, put a caret in some tests
 
 To run all of the tests in a module, ensure the caret is outside of any test method or function and press <kbd>Ctrl</kbd>-<kbd>c</kbd>,<kbd>.</kbd>
 
+To run previous test, press <kbd>Ctrl</kbd>-<kbd>c</kbd>,<kbd>,</kbd> while viewing any python source file.
+
 To run all of the tests in a project, press <kbd>Ctrl</kbd>-<kbd>c</kbd>,<kbd>t</kbd> while viewing any python source file.
 
 Settings

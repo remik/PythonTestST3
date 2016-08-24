@@ -1,4 +1,5 @@
 [
     {"caption": "PythonTest: Run selected tests", "command": "run_python_test"},
-    {"caption": "PythonTest: Run project tests", "command": "run_python_project_tests"}
+    {"caption": "PythonTest: Run project tests", "command": "run_python_project_tests"},
+    {"caption": "PythonTest: Run previous tests", "command": "run_python_previous_tests"}
 ]

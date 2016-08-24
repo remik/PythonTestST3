@@ -11,6 +11,8 @@ TEST_FUNC_RE = re.compile(r'(\s*)def\s+(test_\w+)\s?\(')
 TEST_CASE_RE = re.compile(r'(\s*)class\s+(\w+)')
 TB_FILE = r'[ ]*File \"(...*?)\", line ([0-9]*)'
 
+previous_selection = None
+
 
 class RunPythonTestCommand(sublime_plugin.TextCommand):
     def run(self, edit):
@@ -41,6 +43,7 @@ class RunPythonTestCommand(sublime_plugin.TextCommand):
         return settings.get('options', [])
 
     def get_test_selections(self, wdir):
+        global previous_selection
         mod = self.file_to_module(wdir, self.view.file_name())
         start = 0
         found = False
@@ -48,9 +51,12 @@ class RunPythonTestCommand(sublime_plugin.TextCommand):
             tx = self.view.substr(sublime.Region(start, region.begin()))
             test_name = self.find_test_name(tx, region.begin())
             if test_name:
-                yield "%s.%s" % (mod, test_name)
+                name = "%s.%s" % (mod, test_name)
+                previous_selection = name
+                yield name
                 found = True
         if not found:
+            previous_selection = mod
             yield mod
 
     def find_test_name(self, tx, point):
@@ -109,3 +115,23 @@ class RunPythonTestCommand(sublime_plugin.TextCommand):
 class RunPythonProjectTests(RunPythonTestCommand):
     def get_test_selections(self, settings):
         return []
+
+
+class RunPythonPreviousTests(RunPythonTestCommand):
+    def run(self, edit):
+        if not previous_selection:
+            settings = self.view.window().active_view().settings().get(
+                "python_test", {})
+            panel = self.view.window().create_output_panel('exec')
+            panel.settings().set('color_scheme', self.color_scheme(settings))
+            command = "echo 'No previous selection'"
+            self.view.window().run_command(
+                "exec", {"cmd": [command],
+                         "file_regex": TB_FILE,
+                         "shell": True,
+                         "quiet": settings.get('quiet', True),
+                         "syntax": self.syntax(settings), })
+        return super(RunPythonPreviousTests, self).run(edit)
+
+    def get_test_selections(self, settings):
+        return [previous_selection]

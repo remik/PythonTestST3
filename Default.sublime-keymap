@@ -10,6 +10,12 @@
         "context": [
             {"key": "selector", "operator": "equal", "operand": "source.python"}
         ]
+    },
+    {
+        "keys": ["ctrl+c",","], "command": "run_python_previous_tests",
+        "context": [
+            {"key": "selector", "operator": "equal", "operand": "source.python"}
+        ]
     }
-    
+
 ]
